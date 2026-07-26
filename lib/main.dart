@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:temp_app/models/collection.dart';
 import 'package:temp_app/pages/cards_page.dart';
 import 'package:temp_app/pages/card_editor_page.dart';
+import 'package:temp_app/pages/flashcard_page.dart';
 import 'package:temp_app/pages/settings_page.dart';
 import 'package:temp_app/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,11 @@ class App extends StatelessWidget {
           final passedCardID =
               ModalRoute.of(context)?.settings.arguments as int? ?? -1;
           return CardEditorPage(cardID: passedCardID);
+        },
+        '/flashcard': (context) {
+          final passedDeckID =
+              ModalRoute.of(context)?.settings.arguments as int? ?? -1;
+          return FlashcardPage(deckID: passedDeckID);
         },
       },
     );

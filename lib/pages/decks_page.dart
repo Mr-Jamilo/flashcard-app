@@ -181,7 +181,7 @@ class _DecksPageState extends State<DecksPage> {
             ),
             onTap: () {
               // Navigate to the deck's cards page
-              Navigator.pushNamed(context, '/deck/${deck.id}');
+              Navigator.pushNamed(context, '/flashcard', arguments: deck.id);
             },
             onLongPress: () {
               // Show options to edit or delete the deck
