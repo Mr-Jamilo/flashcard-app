@@ -21,6 +21,15 @@ class Collection extends ChangeNotifier {
     fetchDecks();
   }
 
+  Future<void> fetchDeckandCardsByDeckID(int deckId) async {
+    final fetchedDeck = await isar.decks.get(deckId);
+    currentDecks.clear();
+    currentDecks.add(fetchedDeck!);
+    currentCards.clear();
+    currentCards.addAll(fetchedDeck.cards);
+    notifyListeners();
+  }
+
   Future<void> fetchDecks() async {
     final fetchedDecks = await isar.decks.where().findAll();
     currentDecks.clear();

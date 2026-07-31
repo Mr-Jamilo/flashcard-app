@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:fleather/fleather.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter/material.dart' hide Card;
 import 'package:provider/provider.dart';
 
@@ -21,9 +21,9 @@ class CardEditorPage extends StatefulWidget {
 }
 
 class _CardEditorPageState extends State<CardEditorPage> {
-  late FleatherController frontController;
-  late FleatherController backController;
-  late FleatherController currentController;
+  late QuillController frontController;
+  late QuillController backController;
+  late QuillController currentController;
   final FocusNode frontFocusNode = FocusNode();
   final FocusNode backFocusNode = FocusNode();
   late Card card;
@@ -34,8 +34,8 @@ class _CardEditorPageState extends State<CardEditorPage> {
   @override
   void initState() {
     super.initState();
-    frontController = FleatherController(document: ParchmentDocument());
-    backController = FleatherController(document: ParchmentDocument());
+    frontController = QuillController.basic();
+    backController = QuillController.basic();
     currentController = frontController;
     frontFocusNode.addListener(_updateCurrentController);
     backFocusNode.addListener(_updateCurrentController);
@@ -94,12 +94,8 @@ class _CardEditorPageState extends State<CardEditorPage> {
 
   void fetchCard(int cardID) {
     card = context.read<Collection>().fetchCard(cardID)!;
-    frontController = FleatherController(
-      document: ParchmentDocument.fromJson(jsonDecode(card.front)),
-    );
-    backController = FleatherController(
-      document: ParchmentDocument.fromJson(jsonDecode(card.back)),
-    );
+    frontController.document = Document.fromJson(jsonDecode(card.front));
+    backController.document = Document.fromJson(jsonDecode(card.back));
     dropdownValue = card.deck.value?.id;
   }
 
@@ -162,7 +158,7 @@ class _CardEditorPageState extends State<CardEditorPage> {
                   return null;
                 },
               ),
-              FleatherToolbar.basic(controller: currentController),
+              QuillSimpleToolbar(controller: currentController),
               const SizedBox(height: 8),
               const Text(
                 'Front',
@@ -179,7 +175,7 @@ class _CardEditorPageState extends State<CardEditorPage> {
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: FleatherEditor(
+                  child: QuillEditor.basic(
                     controller: frontController,
                     focusNode: frontFocusNode,
                   ),
@@ -198,7 +194,7 @@ class _CardEditorPageState extends State<CardEditorPage> {
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: FleatherEditor(
+                  child: QuillEditor.basic(
                     controller: backController,
                     focusNode: backFocusNode,
                   ),

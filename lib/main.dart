@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:temp_app/models/collection.dart';
 import 'package:temp_app/pages/cards_page.dart';
 import 'package:temp_app/pages/card_editor_page.dart';
@@ -47,6 +49,12 @@ class App extends StatelessWidget {
           return FlashcardPage(deckID: passedDeckID);
         },
       },
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        FlutterQuillLocalizations.delegate,
+      ],
     );
   }
 }
