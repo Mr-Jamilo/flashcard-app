@@ -25,7 +25,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
   late QuillController frontController;
   late QuillController backController;
   int index = 0;
-  bool showBack = false;
+  bool flipped = false;
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
 
     setState(() {
       index = i;
-      showBack = false;
+      flipped = false;
     });
   }
 
@@ -67,51 +67,66 @@ class _FlashcardPageState extends State<FlashcardPage> {
 
     return Scaffold(
       appBar: AppBar(title: Text(currentDeck.name)),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: FlipCardPlus(
-            perspective: 0.0015,
-            fill: Fill.back,
-            initialSide: CardSide.front,
-            front: Container(
-              padding: const EdgeInsets.all(8),
-              height: MediaQuery.of(context).size.height / 4,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: IgnorePointer(
-                ignoring: true,
-                child: QuillEditor.basic(
-                  controller: frontController,
-                  config: const QuillEditorConfig(
-                    showCursor: false,
-                    enableInteractiveSelection: false,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          AnimatedPositioned(
+            top: flipped ? 100.0 : 230.0,
+            left: 16.0,
+            right: 16.0,
+            height: MediaQuery.of(context).size.height / 4,
+            duration: Duration(seconds: 1),
+            curve: Curves.fastOutSlowIn,
+            child: FlipCardPlus(
+              onFlipDone: (side) {
+                setState(() {
+                  if (flipped == false) {
+                    flipped = true;
+                  }
+                });
+              },
+              perspective: 0.0015,
+              fill: Fill.back,
+              initialSide: CardSide.front,
+              front: Container(
+                padding: const EdgeInsets.all(8),
+                height: MediaQuery.of(context).size.height / 4,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue, width: 2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: IgnorePointer(
+                  ignoring: true,
+                  child: QuillEditor.basic(
+                    controller: frontController,
+                    config: const QuillEditorConfig(
+                      showCursor: false,
+                      enableInteractiveSelection: false,
+                    ),
                   ),
                 ),
               ),
-            ),
-            back: Container(
-              padding: const EdgeInsets.all(8),
-              height: MediaQuery.of(context).size.height / 4,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: IgnorePointer(
-                ignoring: true,
-                child: QuillEditor.basic(
-                  controller: backController,
-                  config: const QuillEditorConfig(
-                    showCursor: false,
-                    enableInteractiveSelection: false,
+              back: Container(
+                padding: const EdgeInsets.all(8),
+                height: MediaQuery.of(context).size.height / 4,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue, width: 2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: IgnorePointer(
+                  ignoring: true,
+                  child: QuillEditor.basic(
+                    controller: backController,
+                    config: const QuillEditorConfig(
+                      showCursor: false,
+                      enableInteractiveSelection: false,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
