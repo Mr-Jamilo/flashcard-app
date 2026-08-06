@@ -26,6 +26,8 @@ class _FlashcardPageState extends State<FlashcardPage> {
   late QuillController backController;
   int index = 0;
   bool flipped = false;
+  bool showButton1 = false;
+  bool showButton2 = false;
 
   @override
   void initState() {
@@ -53,7 +55,6 @@ class _FlashcardPageState extends State<FlashcardPage> {
 
     setState(() {
       index = i;
-      flipped = false;
     });
   }
 
@@ -82,6 +83,12 @@ class _FlashcardPageState extends State<FlashcardPage> {
                 setState(() {
                   if (flipped == false) {
                     flipped = true;
+                    Future.delayed(const Duration(milliseconds: 150), () {
+                      if (mounted) setState(() => showButton1 = true);
+                    });
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      if (mounted) setState(() => showButton2 = true);
+                    });
                   }
                 });
               },
@@ -124,6 +131,55 @@ class _FlashcardPageState extends State<FlashcardPage> {
                   ),
                 ),
               ),
+            ),
+          ),
+          Positioned(
+            bottom: MediaQuery.of(context).size.height / 5,
+            left: 16.0,
+            right: 16.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Button 1: "Again"
+                AnimatedOpacity(
+                  opacity: showButton1 ? 1.0 : 0.0,
+                  duration: const Duration(seconds: 1),
+                  child: AnimatedSlide(
+                    offset: showButton1 ? Offset.zero : const Offset(0, 0.5),
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.easeOut,
+                    child: ElevatedButton.icon(
+                      onPressed: showButton1
+                          ? () {
+                              print("Needs Review");
+                            }
+                          : null,
+                      icon: const Icon(Icons.close, color: Colors.red),
+                      label: const Text("Again"),
+                    ),
+                  ),
+                ),
+
+                // Button 2: "Good"
+                AnimatedOpacity(
+                  opacity: showButton2 ? 1.0 : 0.0,
+                  duration: const Duration(seconds: 1),
+                  child: AnimatedSlide(
+                    offset: showButton2 ? Offset.zero : const Offset(0, 0.5),
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.easeOut,
+                    child: ElevatedButton.icon(
+                      onPressed: showButton2
+                          ? () {
+                              print("Got it right");
+                            }
+                          : null,
+                      icon: const Icon(Icons.check, color: Colors.green),
+                      label: const Text("Good"),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
