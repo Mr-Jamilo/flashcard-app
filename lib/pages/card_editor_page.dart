@@ -66,19 +66,18 @@ class _CardEditorPageState extends State<CardEditorPage> {
   }
 
   void submitCard() async {
-    // Implement card creation logic here
-    final frontContent = jsonEncode(frontController.document);
-    final backContent = jsonEncode(backController.document);
+    final frontContent = jsonEncode(
+      frontController.document.toDelta().toJson(),
+    );
+    final backContent = jsonEncode(backController.document.toDelta().toJson());
 
     if (widget.cardID == -1) {
-      // Create a new card
       context.read<Collection>().createCard(
         dropdownValue!,
         frontContent,
         backContent,
       );
     } else {
-      // Update existing card
       context.read<Collection>().updateCard(
         widget.cardID,
         frontContent,
@@ -104,6 +103,16 @@ class _CardEditorPageState extends State<CardEditorPage> {
     final database = context.watch<Collection>();
     List<Deck> currentDecks = database.currentDecks;
 
+    final defaultStyle = DefaultStyles(
+      paragraph: DefaultTextBlockStyle(
+        const TextStyle(fontSize: 20.0, color: Colors.black, height: 1.15),
+        const HorizontalSpacing(0, 0),
+        const VerticalSpacing(0, 0),
+        const VerticalSpacing(0, 0),
+        null,
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.cardID == -1 ? 'Add Card' : 'Edit Card'),
@@ -117,7 +126,6 @@ class _CardEditorPageState extends State<CardEditorPage> {
           IconButton(
             icon: const Icon(Icons.done),
             onPressed: () {
-              // Save the card
               if (_formKey.currentState!.validate()) {
                 submitCard();
                 Navigator.of(context).pop();
@@ -158,7 +166,15 @@ class _CardEditorPageState extends State<CardEditorPage> {
                   return null;
                 },
               ),
-              QuillSimpleToolbar(controller: currentController),
+              QuillSimpleToolbar(
+                controller: currentController,
+                config: const QuillSimpleToolbarConfig(
+                  multiRowsDisplay: false,
+                  showFontFamily: false,
+                  showFontSize: false,
+                  showSearchButton: false,
+                ),
+              ),
               const SizedBox(height: 8),
               const Text(
                 'Front',
@@ -178,6 +194,7 @@ class _CardEditorPageState extends State<CardEditorPage> {
                   child: QuillEditor.basic(
                     controller: frontController,
                     focusNode: frontFocusNode,
+                    config: QuillEditorConfig(customStyles: defaultStyle),
                   ),
                 ),
               ),
@@ -197,6 +214,7 @@ class _CardEditorPageState extends State<CardEditorPage> {
                   child: QuillEditor.basic(
                     controller: backController,
                     focusNode: backFocusNode,
+                    config: QuillEditorConfig(customStyles: defaultStyle),
                   ),
                 ),
               ),
