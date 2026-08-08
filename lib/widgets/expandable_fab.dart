@@ -130,7 +130,6 @@ class _ExpandableFabState extends State<ExpandableFab>
           curve: const Interval(0.25, 1.0, curve: Curves.easeInOut),
           duration: const Duration(milliseconds: 250),
           child: FloatingActionButton(
-            shape: const CircleBorder(),
             onPressed: _toggle,
             backgroundColor: Theme.of(context).colorScheme.primary,
             child: const Icon(Icons.add),
@@ -185,7 +184,7 @@ class _ExpandingActionButton extends StatelessWidget {
         final verticalDistance = maxDistance * progress.value;
 
         return Positioned(
-          right: 4.0,
+          right: 8.1,
           bottom: 4.0 + verticalDistance,
           child: Transform.rotate(
             angle: (1.0 - progress.value) * math.pi / 2,

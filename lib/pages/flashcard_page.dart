@@ -99,7 +99,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
                 padding: const EdgeInsets.all(8),
                 height: MediaQuery.of(context).size.height / 4,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue, width: 2),
+                  border: Border.all(color: Colors.blue, width: 3),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: IgnorePointer(
@@ -117,7 +117,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
                 padding: const EdgeInsets.all(8),
                 height: MediaQuery.of(context).size.height / 4,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue, width: 2),
+                  border: Border.all(color: Colors.blue, width: 3),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: IgnorePointer(
@@ -138,7 +138,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
             left: 16.0,
             right: 16.0,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // Button 1: "Again"
                 AnimatedOpacity(
@@ -148,14 +148,17 @@ class _FlashcardPageState extends State<FlashcardPage> {
                     offset: showButton1 ? Offset.zero : const Offset(0, 0.5),
                     duration: const Duration(seconds: 1),
                     curve: Curves.easeOut,
-                    child: ElevatedButton.icon(
+                    child: IconButton.outlined(
                       onPressed: showButton1
                           ? () {
                               print("Needs Review");
                             }
                           : null,
                       icon: const Icon(Icons.close, color: Colors.red),
-                      label: const Text("Again"),
+                      iconSize: 50,
+                      style: IconButton.styleFrom(
+                        side: const BorderSide(color: Colors.red, width: 3),
+                      ),
                     ),
                   ),
                 ),
@@ -168,14 +171,17 @@ class _FlashcardPageState extends State<FlashcardPage> {
                     offset: showButton2 ? Offset.zero : const Offset(0, 0.5),
                     duration: const Duration(seconds: 1),
                     curve: Curves.easeOut,
-                    child: ElevatedButton.icon(
+                    child: IconButton.outlined(
                       onPressed: showButton2
                           ? () {
                               print("Got it right");
                             }
                           : null,
                       icon: const Icon(Icons.check, color: Colors.green),
-                      label: const Text("Good"),
+                      iconSize: 50,
+                      style: IconButton.styleFrom(
+                        side: const BorderSide(color: Colors.green, width: 3),
+                      ),
                     ),
                   ),
                 ),
