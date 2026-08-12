@@ -28,6 +28,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
   bool flipped = false;
   bool showButton1 = false;
   bool showButton2 = false;
+  bool initialised = false;
 
   @override
   void initState() {
@@ -46,14 +47,16 @@ class _FlashcardPageState extends State<FlashcardPage> {
     super.dispose();
   }
 
-  void loadCard(int i) {
-    final cards = context.read<Collection>().currentCards;
-    if (cards.isEmpty) return;
+  void loadCard(int i, List<Card> cards) {
+    if (i >= cards.length) {
+      setState(() => cards.clear());
+      return;
+    }
     final card = cards[i];
-    frontController.document = Document.fromJson(jsonDecode(card.front));
-    backController.document = Document.fromJson(jsonDecode(card.back));
 
     setState(() {
+      frontController.document = Document.fromJson(jsonDecode(card.front));
+      backController.document = Document.fromJson(jsonDecode(card.back));
       index = i;
     });
   }
@@ -63,8 +66,29 @@ class _FlashcardPageState extends State<FlashcardPage> {
     final database = context.watch<Collection>();
     Deck currentDeck = database.currentDecks[0];
     List<Card> cards = database.currentCards;
-    cards.shuffle();
-    loadCard(0);
+
+    if (cards.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: Text(currentDeck.name)),
+        body: const Center(child: Text("No cards in this deck.")),
+      );
+    }
+
+    if (!initialised) {
+      cards.shuffle();
+      loadCard(0, cards);
+      initialised = true;
+    }
+
+    final defaultStyle = DefaultStyles(
+      paragraph: DefaultTextBlockStyle(
+        const TextStyle(fontSize: 20.0, color: Colors.black, height: 1.15),
+        const HorizontalSpacing(0, 0),
+        const VerticalSpacing(0, 0),
+        const VerticalSpacing(0, 0),
+        null,
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(title: Text(currentDeck.name)),
@@ -79,6 +103,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
             duration: Duration(seconds: 1),
             curve: Curves.fastOutSlowIn,
             child: FlipCardPlus(
+              key: ValueKey(cards[index].id),
               onFlipDone: (side) {
                 setState(() {
                   if (flipped == false) {
@@ -106,9 +131,10 @@ class _FlashcardPageState extends State<FlashcardPage> {
                   ignoring: true,
                   child: QuillEditor.basic(
                     controller: frontController,
-                    config: const QuillEditorConfig(
+                    config: QuillEditorConfig(
                       showCursor: false,
                       enableInteractiveSelection: false,
+                      customStyles: defaultStyle,
                     ),
                   ),
                 ),
@@ -124,9 +150,10 @@ class _FlashcardPageState extends State<FlashcardPage> {
                   ignoring: true,
                   child: QuillEditor.basic(
                     controller: backController,
-                    config: const QuillEditorConfig(
+                    config: QuillEditorConfig(
                       showCursor: false,
                       enableInteractiveSelection: false,
+                      customStyles: defaultStyle,
                     ),
                   ),
                 ),
@@ -151,7 +178,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
                     child: IconButton.outlined(
                       onPressed: showButton1
                           ? () {
-                              print("Needs Review");
+                              //move card to last position
                             }
                           : null,
                       icon: const Icon(Icons.close, color: Colors.red),
@@ -174,7 +201,9 @@ class _FlashcardPageState extends State<FlashcardPage> {
                     child: IconButton.outlined(
                       onPressed: showButton2
                           ? () {
-                              print("Got it right");
+                              // remove card from list
+                              cards.removeAt(index);
+                              loadCard(index, cards);
                             }
                           : null,
                       icon: const Icon(Icons.check, color: Colors.green),

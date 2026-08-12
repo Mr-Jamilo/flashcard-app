@@ -173,6 +173,7 @@ class _CardEditorPageState extends State<CardEditorPage> {
                   showFontFamily: false,
                   showFontSize: false,
                   showSearchButton: false,
+                  showColorButton: false,
                 ),
               ),
               const SizedBox(height: 8),

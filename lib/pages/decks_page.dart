@@ -139,32 +139,23 @@ class _DecksPageState extends State<DecksPage> {
               leading: const Icon(Icons.home),
               title: const Text('Decks'),
               onTap: () {
-                // handle the tap
-                Navigator.pop(context); // close the drawer
+                Navigator.pop(context);
               },
             ),
             ListTile(
               leading: const Icon(Icons.book),
               title: const Text('Card Browser'),
               onTap: () {
-                // handle the tap
-                Navigator.pop(context); // close the drawer
-                Navigator.pushReplacementNamed(
-                  context,
-                  '/cards',
-                ); // navigate to cards page
+                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, '/cards');
               },
             ),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Settings'),
               onTap: () {
-                // handle the tap
-                Navigator.pop(context); // close the drawer
-                Navigator.pushReplacementNamed(
-                  context,
-                  '/settings',
-                ); // navigate to settings
+                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, '/settings');
               },
             ),
           ],
@@ -180,11 +171,9 @@ class _DecksPageState extends State<DecksPage> {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             onTap: () {
-              // Navigate to the deck's cards page
               Navigator.pushNamed(context, '/flashcard', arguments: deck.id);
             },
             onLongPress: () {
-              // Show options to edit or delete the deck
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -205,7 +194,6 @@ class _DecksPageState extends State<DecksPage> {
                           leading: const Icon(Icons.delete),
                           title: const Text('Delete'),
                           onTap: () {
-                            // Handle delete
                             deleteDeck(deck.id);
                             Navigator.of(context).pop();
                           },
