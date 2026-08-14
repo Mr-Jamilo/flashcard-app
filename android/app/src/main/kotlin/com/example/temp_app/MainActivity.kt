@@ -1,4 +1,4 @@
-package com.example.temp_app
+package app.jamilo.flashcard
 
 import io.flutter.embedding.android.FlutterActivity
 

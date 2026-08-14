@@ -171,7 +171,15 @@ class _DecksPageState extends State<DecksPage> {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/flashcard', arguments: deck.id);
+              Navigator.pushNamed(
+                context,
+                '/flashcard',
+                arguments: deck.id,
+              ).then((_) {
+                if (mounted) {
+                  fetchDecks();
+                }
+              });
             },
             onLongPress: () {
               showDialog(
