@@ -1,16 +1,20 @@
-import 'package:isar/isar.dart';
-import 'package:temp_app/models/deck.dart';
+import 'package:isar_plus/isar_plus.dart';
 
 part 'card.g.dart';
 
 @collection
 class Card {
-  Id id = Isar.autoIncrement;
+  final int id;
   String front;
   String back;
 
-  @Backlink(to: 'cards')
-  final deck = IsarLink<Deck>();
+  @Index()
+  int deckId;
 
-  Card({required this.front, required this.back});
+  Card({
+    required this.id,
+    required this.front,
+    required this.back,
+    required this.deckId,
+  });
 }

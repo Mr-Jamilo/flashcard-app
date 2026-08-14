@@ -95,19 +95,19 @@ class _DecksPageState extends State<DecksPage> {
   @override
   Widget build(BuildContext context) {
     final database = context.watch<Collection>();
-    List<Deck> currentDecks = database.currentDecks;
+    List<dynamic> currentDecks = database.currentDecks;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Decks'),
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.search),
-            tooltip: 'Search Decks',
-            onPressed: () {
-              // handle the press
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.search),
+          //   tooltip: 'Search Decks',
+          //   onPressed: () {
+          //     // handle the press
+          //   },
+          // ),
           IconButton(
             icon: const Icon(Icons.dark_mode),
             tooltip: 'Toggle Theme',
@@ -115,20 +115,20 @@ class _DecksPageState extends State<DecksPage> {
               Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.sync),
-            tooltip: 'Sync',
-            onPressed: () {
-              // handle the press
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            tooltip: 'More',
-            onPressed: () {
-              // handle the press
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.sync),
+          //   tooltip: 'Sync',
+          //   onPressed: () {
+          //     // handle the press
+          //   },
+          // ),
+          // IconButton(
+          //   icon: const Icon(Icons.more_vert),
+          //   tooltip: 'More',
+          //   onPressed: () {
+          //     // handle the press
+          //   },
+          // ),
         ],
       ),
       drawer: Drawer(
@@ -150,14 +150,14 @@ class _DecksPageState extends State<DecksPage> {
                 Navigator.pushReplacementNamed(context, '/cards');
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/settings');
-              },
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.settings),
+            //   title: const Text('Settings'),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.pushReplacementNamed(context, '/settings');
+            //   },
+            // ),
           ],
         ),
       ),

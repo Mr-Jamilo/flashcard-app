@@ -47,11 +47,12 @@ class _CardsPageState extends State<CardsPage> {
                   ],
                   rows: database.currentDecks.map<DataRow>((deck) {
                     final isSelected = selectedDeckIds.contains(deck.id);
+                    final cardCount = database.getCardCountForDeck(deck.id);
                     return DataRow(
                       selected: isSelected,
                       cells: [
                         DataCell(Text(deck.name)),
-                        DataCell(Text(deck.cards.length.toString())),
+                        DataCell(Text(cardCount.toString())),
                       ],
                       onSelectChanged: (bool? value) {
                         setState(() {
@@ -108,7 +109,8 @@ class _CardsPageState extends State<CardsPage> {
     double width = size.width;
 
     final database = context.watch<Collection>();
-    List<Card> currentCards = database.currentCards;
+    List<dynamic> currentDecks = database.currentDecks;
+    List<dynamic> currentCards = database.currentCards;
 
     return Scaffold(
       appBar: selectMode
@@ -167,17 +169,17 @@ class _CardsPageState extends State<CardsPage> {
                 Navigator.pop(context); // close the drawer
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.pop(context); // close the drawer
-                Navigator.pushReplacementNamed(
-                  context,
-                  '/settings',
-                ); // navigate to settings
-              },
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.settings),
+            //   title: const Text('Settings'),
+            //   onTap: () {
+            //     Navigator.pop(context); // close the drawer
+            //     Navigator.pushReplacementNamed(
+            //       context,
+            //       '/settings',
+            //     ); // navigate to settings
+            //   },
+            // ),
           ],
         ),
       ),
@@ -201,21 +203,21 @@ class _CardsPageState extends State<CardsPage> {
           ],
           rows: currentCards.map<DataRow>((card) {
             final isSelected = selectedCardIds.contains(card.id);
+            final deckIndex = currentDecks.indexWhere(
+              (deck) => deck.id == card.deckId,
+            );
+            final deckName = deckIndex != -1
+                ? currentDecks[deckIndex].name
+                : 'No Deck';
 
             return DataRow(
               selected: isSelected,
               cells: [
                 DataCell(SizedBox(width: width / 3, child: Text(card.front))),
                 DataCell(SizedBox(width: width / 3, child: Text(card.back))),
-                DataCell(
-                  SizedBox(
-                    width: width / 3,
-                    child: Text(card.deck.value?.name ?? 'No Deck'),
-                  ),
-                ),
+                DataCell(SizedBox(width: width / 3, child: Text(deckName))),
               ],
               onLongPress: () {
-                //select card for delete
                 setState(() {
                   selectMode = true;
                   selectedCardIds.add(card.id);

@@ -3,318 +3,253 @@
 part of 'card.dart';
 
 // **************************************************************************
-// IsarCollectionGenerator
+// _IsarCollectionGenerator
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+// ignore_for_file: duplicate_ignore, invalid_use_of_protected_member, lines_longer_than_80_chars, constant_identifier_names, avoid_js_rounded_ints, no_leading_underscores_for_local_identifiers, require_trailing_commas, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_in_if_null_operators, library_private_types_in_public_api, prefer_const_constructors
+// ignore_for_file: type=lint
 
 extension GetCardCollection on Isar {
-  IsarCollection<Card> get cards => this.collection();
+  IsarCollection<int, Card> get cards => this.collection();
 }
 
-const CardSchema = CollectionSchema(
-  name: r'Card',
-  id: 2706062385186124215,
-  properties: {
-    r'back': PropertySchema(
-      id: 0,
-      name: r'back',
-      type: IsarType.string,
-    ),
-    r'front': PropertySchema(
-      id: 1,
-      name: r'front',
-      type: IsarType.string,
-    )
-  },
-  estimateSize: _cardEstimateSize,
-  serialize: _cardSerialize,
-  deserialize: _cardDeserialize,
-  deserializeProp: _cardDeserializeProp,
-  idName: r'id',
-  indexes: {},
-  links: {
-    r'deck': LinkSchema(
-      id: -3734896783927191152,
-      name: r'deck',
-      target: r'Deck',
-      single: true,
-      linkName: r'cards',
-    )
-  },
-  embeddedSchemas: {},
-  getId: _cardGetId,
-  getLinks: _cardGetLinks,
-  attach: _cardAttach,
-  version: '3.1.0+1',
+final CardSchema = IsarGeneratedSchema(
+  schema: IsarSchema(
+    name: 'Card',
+    idName: 'id',
+    embedded: false,
+    properties: [
+      IsarPropertySchema(name: 'front', type: IsarType.string),
+      IsarPropertySchema(name: 'back', type: IsarType.string),
+      IsarPropertySchema(name: 'deckId', type: IsarType.long),
+    ],
+    indexes: [
+      IsarIndexSchema(
+        name: 'deckId',
+        properties: ["deckId"],
+        unique: false,
+        hash: false,
+      ),
+    ],
+  ),
+  converter: IsarObjectConverter<int, Card>(
+    serialize: serializeCard,
+    deserialize: deserializeCard,
+    deserializeProperty: deserializeCardProp,
+  ),
+  getEmbeddedSchemas: () => [],
 );
 
-int _cardEstimateSize(
-  Card object,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  var bytesCount = offsets.last;
-  bytesCount += 3 + object.back.length * 3;
-  bytesCount += 3 + object.front.length * 3;
-  return bytesCount;
-}
-
-void _cardSerialize(
-  Card object,
-  IsarWriter writer,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  writer.writeString(offsets[0], object.back);
-  writer.writeString(offsets[1], object.front);
-}
-
-Card _cardDeserialize(
-  Id id,
-  IsarReader reader,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  final object = Card(
-    back: reader.readString(offsets[0]),
-    front: reader.readString(offsets[1]),
-  );
-  object.id = id;
-  return object;
-}
-
-P _cardDeserializeProp<P>(
-  IsarReader reader,
-  int propertyId,
-  int offset,
-  Map<Type, List<int>> allOffsets,
-) {
-  switch (propertyId) {
-    case 0:
-      return (reader.readString(offset)) as P;
-    case 1:
-      return (reader.readString(offset)) as P;
-    default:
-      throw IsarError('Unknown property with id $propertyId');
-  }
-}
-
-Id _cardGetId(Card object) {
+@isarProtected
+int serializeCard(IsarWriter writer, Card object) {
+  IsarCore.writeString(writer, 1, object.front);
+  IsarCore.writeString(writer, 2, object.back);
+  IsarCore.writeLong(writer, 3, object.deckId);
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _cardGetLinks(Card object) {
-  return [object.deck];
+@isarProtected
+Card deserializeCard(IsarReader reader) {
+  final int _id;
+  _id = IsarCore.readId(reader);
+  final String _front;
+  _front = IsarCore.readString(reader, 1) ?? '';
+  final String _back;
+  _back = IsarCore.readString(reader, 2) ?? '';
+  final int _deckId;
+  _deckId = IsarCore.readLong(reader, 3);
+  final object = Card(id: _id, front: _front, back: _back, deckId: _deckId);
+  return object;
 }
 
-void _cardAttach(IsarCollection<dynamic> col, Id id, Card object) {
-  object.id = id;
-  object.deck.attach(col, col.isar.collection<Deck>(), r'deck', id);
-}
-
-extension CardQueryWhereSort on QueryBuilder<Card, Card, QWhere> {
-  QueryBuilder<Card, Card, QAfterWhere> anyId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(const IdWhereClause.any());
-    });
+@isarProtected
+dynamic deserializeCardProp(IsarReader reader, int property) {
+  switch (property) {
+    case 0:
+      return IsarCore.readId(reader);
+    case 1:
+      return IsarCore.readString(reader, 1) ?? '';
+    case 2:
+      return IsarCore.readString(reader, 2) ?? '';
+    case 3:
+      return IsarCore.readLong(reader, 3);
+    default:
+      throw ArgumentError('Unknown property: $property');
   }
 }
 
-extension CardQueryWhere on QueryBuilder<Card, Card, QWhereClause> {
-  QueryBuilder<Card, Card, QAfterWhereClause> idEqualTo(Id id) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
-      ));
-    });
-  }
+sealed class _CardUpdate {
+  bool call({required int id, String? front, String? back, int? deckId});
+}
 
-  QueryBuilder<Card, Card, QAfterWhereClause> idNotEqualTo(Id id) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
-            )
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
-            );
-      } else {
-        return query
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
-            )
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
-            );
-      }
-    });
-  }
+class _CardUpdateImpl implements _CardUpdate {
+  const _CardUpdateImpl(this.collection);
 
-  QueryBuilder<Card, Card, QAfterWhereClause> idGreaterThan(Id id,
-      {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: id, includeLower: include),
-      );
-    });
-  }
+  final IsarCollection<int, Card> collection;
 
-  QueryBuilder<Card, Card, QAfterWhereClause> idLessThan(Id id,
-      {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.lessThan(upper: id, includeUpper: include),
-      );
-    });
-  }
-
-  QueryBuilder<Card, Card, QAfterWhereClause> idBetween(
-    Id lowerId,
-    Id upperId, {
-    bool includeLower = true,
-    bool includeUpper = true,
+  @override
+  bool call({
+    required int id,
+    Object? front = ignore,
+    Object? back = ignore,
+    Object? deckId = ignore,
   }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
-        includeLower: includeLower,
-        upper: upperId,
-        includeUpper: includeUpper,
-      ));
+    return collection.updateProperties(
+          [id],
+          {
+            if (front != ignore) 1: front as String?,
+            if (back != ignore) 2: back as String?,
+            if (deckId != ignore) 3: deckId as int?,
+          },
+        ) >
+        0;
+  }
+}
+
+sealed class _CardUpdateAll {
+  int call({required List<int> id, String? front, String? back, int? deckId});
+}
+
+class _CardUpdateAllImpl implements _CardUpdateAll {
+  const _CardUpdateAllImpl(this.collection);
+
+  final IsarCollection<int, Card> collection;
+
+  @override
+  int call({
+    required List<int> id,
+    Object? front = ignore,
+    Object? back = ignore,
+    Object? deckId = ignore,
+  }) {
+    return collection.updateProperties(id, {
+      if (front != ignore) 1: front as String?,
+      if (back != ignore) 2: back as String?,
+      if (deckId != ignore) 3: deckId as int?,
     });
   }
+}
+
+extension CardUpdate on IsarCollection<int, Card> {
+  _CardUpdate get update => _CardUpdateImpl(this);
+
+  _CardUpdateAll get updateAll => _CardUpdateAllImpl(this);
+}
+
+sealed class _CardQueryUpdate {
+  int call({String? front, String? back, int? deckId});
+}
+
+class _CardQueryUpdateImpl implements _CardQueryUpdate {
+  const _CardQueryUpdateImpl(this.query, {this.limit});
+
+  final IsarQuery<Card> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? front = ignore,
+    Object? back = ignore,
+    Object? deckId = ignore,
+  }) {
+    return query.updateProperties(limit: limit, {
+      if (front != ignore) 1: front as String?,
+      if (back != ignore) 2: back as String?,
+      if (deckId != ignore) 3: deckId as int?,
+    });
+  }
+}
+
+extension CardQueryUpdate on IsarQuery<Card> {
+  _CardQueryUpdate get updateFirst => _CardQueryUpdateImpl(this, limit: 1);
+
+  _CardQueryUpdate get updateAll => _CardQueryUpdateImpl(this);
+}
+
+class _CardQueryBuilderUpdateImpl implements _CardQueryUpdate {
+  const _CardQueryBuilderUpdateImpl(this.query, {this.limit});
+
+  final QueryBuilder<Card, Card, QOperations> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? front = ignore,
+    Object? back = ignore,
+    Object? deckId = ignore,
+  }) {
+    final q = query.build();
+    try {
+      return q.updateProperties(limit: limit, {
+        if (front != ignore) 1: front as String?,
+        if (back != ignore) 2: back as String?,
+        if (deckId != ignore) 3: deckId as int?,
+      });
+    } finally {
+      q.close();
+    }
+  }
+}
+
+extension CardQueryBuilderUpdate on QueryBuilder<Card, Card, QOperations> {
+  _CardQueryUpdate get updateFirst =>
+      _CardQueryBuilderUpdateImpl(this, limit: 1);
+
+  _CardQueryUpdate get updateAll => _CardQueryBuilderUpdateImpl(this);
 }
 
 extension CardQueryFilter on QueryBuilder<Card, Card, QFilterCondition> {
-  QueryBuilder<Card, Card, QAfterFilterCondition> backEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Card, Card, QAfterFilterCondition> idEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'back',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        EqualCondition(property: 0, value: value),
+      );
     });
   }
 
-  QueryBuilder<Card, Card, QAfterFilterCondition> backGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Card, Card, QAfterFilterCondition> idGreaterThan(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'back',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        GreaterCondition(property: 0, value: value),
+      );
     });
   }
 
-  QueryBuilder<Card, Card, QAfterFilterCondition> backLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Card, Card, QAfterFilterCondition> idGreaterThanOrEqualTo(
+    int value,
+  ) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'back',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(property: 0, value: value),
+      );
     });
   }
 
-  QueryBuilder<Card, Card, QAfterFilterCondition> backBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Card, Card, QAfterFilterCondition> idLessThan(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'back',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(LessCondition(property: 0, value: value));
     });
   }
 
-  QueryBuilder<Card, Card, QAfterFilterCondition> backStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Card, Card, QAfterFilterCondition> idLessThanOrEqualTo(
+    int value,
+  ) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'back',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        LessOrEqualCondition(property: 0, value: value),
+      );
     });
   }
 
-  QueryBuilder<Card, Card, QAfterFilterCondition> backEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Card, Card, QAfterFilterCondition> idBetween(
+    int lower,
+    int upper,
+  ) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'back',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Card, Card, QAfterFilterCondition> backContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'back',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Card, Card, QAfterFilterCondition> backMatches(String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'back',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Card, Card, QAfterFilterCondition> backIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'back',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Card, Card, QAfterFilterCondition> backIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'back',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        BetweenCondition(property: 0, lower: lower, upper: upper),
+      );
     });
   }
 
@@ -323,60 +258,82 @@ extension CardQueryFilter on QueryBuilder<Card, Card, QFilterCondition> {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'front',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        EqualCondition(property: 1, value: value, caseSensitive: caseSensitive),
+      );
     });
   }
 
   QueryBuilder<Card, Card, QAfterFilterCondition> frontGreaterThan(
     String value, {
-    bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'front',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 1,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> frontGreaterThanOrEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 1,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<Card, Card, QAfterFilterCondition> frontLessThan(
     String value, {
-    bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'front',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        LessCondition(property: 1, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> frontLessThanOrEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 1,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<Card, Card, QAfterFilterCondition> frontBetween(
     String lower,
     String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'front',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 1,
+          lower: lower,
+          upper: upper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
@@ -385,11 +342,13 @@ extension CardQueryFilter on QueryBuilder<Card, Card, QFilterCondition> {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'front',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        StartsWithCondition(
+          property: 1,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
@@ -398,219 +357,493 @@ extension CardQueryFilter on QueryBuilder<Card, Card, QFilterCondition> {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'front',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        EndsWithCondition(
+          property: 1,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<Card, Card, QAfterFilterCondition> frontContains(String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<Card, Card, QAfterFilterCondition> frontContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'front',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        ContainsCondition(
+          property: 1,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<Card, Card, QAfterFilterCondition> frontMatches(String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<Card, Card, QAfterFilterCondition> frontMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'front',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        MatchesCondition(
+          property: 1,
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<Card, Card, QAfterFilterCondition> frontIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'front',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        const EqualCondition(property: 1, value: ''),
+      );
     });
   }
 
   QueryBuilder<Card, Card, QAfterFilterCondition> frontIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'front',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        const GreaterCondition(property: 1, value: ''),
+      );
     });
   }
 
-  QueryBuilder<Card, Card, QAfterFilterCondition> idEqualTo(Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Card, Card, QAfterFilterCondition> idGreaterThan(
-    Id value, {
-    bool include = false,
+  QueryBuilder<Card, Card, QAfterFilterCondition> backEqualTo(
+    String value, {
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        EqualCondition(property: 2, value: value, caseSensitive: caseSensitive),
+      );
     });
   }
 
-  QueryBuilder<Card, Card, QAfterFilterCondition> idLessThan(
-    Id value, {
-    bool include = false,
+  QueryBuilder<Card, Card, QAfterFilterCondition> backGreaterThan(
+    String value, {
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<Card, Card, QAfterFilterCondition> idBetween(
-    Id lower,
-    Id upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
+  QueryBuilder<Card, Card, QAfterFilterCondition> backGreaterThanOrEqualTo(
+    String value, {
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> backLessThan(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(property: 2, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> backLessThanOrEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> backBetween(
+    String lower,
+    String upper, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 2,
+          lower: lower,
+          upper: upper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> backStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        StartsWithCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> backEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EndsWithCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> backContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        ContainsCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> backMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        MatchesCondition(
+          property: 2,
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> backIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const EqualCondition(property: 2, value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> backIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const GreaterCondition(property: 2, value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> deckIdEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(property: 3, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> deckIdGreaterThan(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(property: 3, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> deckIdGreaterThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(property: 3, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> deckIdLessThan(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(LessCondition(property: 3, value: value));
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> deckIdLessThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(property: 3, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterFilterCondition> deckIdBetween(
+    int lower,
+    int upper,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(property: 3, lower: lower, upper: upper),
+      );
     });
   }
 }
 
 extension CardQueryObject on QueryBuilder<Card, Card, QFilterCondition> {}
 
-extension CardQueryLinks on QueryBuilder<Card, Card, QFilterCondition> {
-  QueryBuilder<Card, Card, QAfterFilterCondition> deck(FilterQuery<Deck> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'deck');
-    });
-  }
-
-  QueryBuilder<Card, Card, QAfterFilterCondition> deckIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'deck', 0, true, 0, true);
-    });
-  }
-}
-
 extension CardQuerySortBy on QueryBuilder<Card, Card, QSortBy> {
-  QueryBuilder<Card, Card, QAfterSortBy> sortByBack() {
+  QueryBuilder<Card, Card, QAfterSortBy> sortById() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'back', Sort.asc);
+      return query.addSortBy(0);
     });
   }
 
-  QueryBuilder<Card, Card, QAfterSortBy> sortByBackDesc() {
+  QueryBuilder<Card, Card, QAfterSortBy> sortByIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'back', Sort.desc);
+      return query.addSortBy(0, sort: Sort.desc);
     });
   }
 
-  QueryBuilder<Card, Card, QAfterSortBy> sortByFront() {
+  QueryBuilder<Card, Card, QAfterSortBy> sortByFront({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'front', Sort.asc);
+      return query.addSortBy(1, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Card, Card, QAfterSortBy> sortByFrontDesc() {
+  QueryBuilder<Card, Card, QAfterSortBy> sortByFrontDesc({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'front', Sort.desc);
+      return query.addSortBy(1, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterSortBy> sortByBack({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterSortBy> sortByBackDesc({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterSortBy> sortByDeckId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(3);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterSortBy> sortByDeckIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(3, sort: Sort.desc);
     });
   }
 }
 
 extension CardQuerySortThenBy on QueryBuilder<Card, Card, QSortThenBy> {
-  QueryBuilder<Card, Card, QAfterSortBy> thenByBack() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'back', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Card, Card, QAfterSortBy> thenByBackDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'back', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Card, Card, QAfterSortBy> thenByFront() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'front', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Card, Card, QAfterSortBy> thenByFrontDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'front', Sort.desc);
-    });
-  }
-
   QueryBuilder<Card, Card, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
+      return query.addSortBy(0);
     });
   }
 
   QueryBuilder<Card, Card, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
+      return query.addSortBy(0, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterSortBy> thenByFront({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(1, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterSortBy> thenByFrontDesc({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(1, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterSortBy> thenByBack({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterSortBy> thenByBackDesc({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterSortBy> thenByDeckId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(3);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterSortBy> thenByDeckIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(3, sort: Sort.desc);
     });
   }
 }
 
 extension CardQueryWhereDistinct on QueryBuilder<Card, Card, QDistinct> {
-  QueryBuilder<Card, Card, QDistinct> distinctByBack(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Card, Card, QAfterDistinct> distinctByFront({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'back', caseSensitive: caseSensitive);
+      return query.addDistinctBy(1, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Card, Card, QDistinct> distinctByFront(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Card, Card, QAfterDistinct> distinctByBack({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'front', caseSensitive: caseSensitive);
+      return query.addDistinctBy(2, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Card, Card, QAfterDistinct> distinctByDeckId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(3);
     });
   }
 }
 
-extension CardQueryProperty on QueryBuilder<Card, Card, QQueryProperty> {
-  QueryBuilder<Card, int, QQueryOperations> idProperty() {
+extension CardQueryProperty1 on QueryBuilder<Card, Card, QProperty> {
+  QueryBuilder<Card, int, QAfterProperty> idProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
+      return query.addProperty(0);
     });
   }
 
-  QueryBuilder<Card, String, QQueryOperations> backProperty() {
+  QueryBuilder<Card, String, QAfterProperty> frontProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'back');
+      return query.addProperty(1);
     });
   }
 
-  QueryBuilder<Card, String, QQueryOperations> frontProperty() {
+  QueryBuilder<Card, String, QAfterProperty> backProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'front');
+      return query.addProperty(2);
+    });
+  }
+
+  QueryBuilder<Card, int, QAfterProperty> deckIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(3);
+    });
+  }
+}
+
+extension CardQueryProperty2<R> on QueryBuilder<Card, R, QAfterProperty> {
+  QueryBuilder<Card, (R, int), QAfterProperty> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<Card, (R, String), QAfterProperty> frontProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<Card, (R, String), QAfterProperty> backProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+
+  QueryBuilder<Card, (R, int), QAfterProperty> deckIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(3);
+    });
+  }
+}
+
+extension CardQueryProperty3<R1, R2>
+    on QueryBuilder<Card, (R1, R2), QAfterProperty> {
+  QueryBuilder<Card, (R1, R2, int), QOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<Card, (R1, R2, String), QOperations> frontProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<Card, (R1, R2, String), QOperations> backProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+
+  QueryBuilder<Card, (R1, R2, int), QOperations> deckIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(3);
     });
   }
 }

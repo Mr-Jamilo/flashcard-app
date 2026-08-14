@@ -7,7 +7,6 @@ import 'package:flip_card_plus/flip_card_plus.dart';
 
 import '../models/collection.dart';
 import '../models/deck.dart';
-import '../models/card.dart';
 
 void main() {
   return runApp(const FlashcardPage(deckID: -1));
@@ -47,7 +46,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
     super.dispose();
   }
 
-  void loadCard(int i, List<Card> cards) {
+  void loadCard(int i, List<dynamic> cards) {
     if (i >= cards.length) {
       setState(() => cards.clear());
       return;
@@ -65,7 +64,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
   Widget build(BuildContext context) {
     final database = context.watch<Collection>();
     Deck currentDeck = database.currentDecks[0];
-    List<Card> cards = database.currentCards;
+    List<dynamic> cards = database.currentCards;
 
     if (cards.isEmpty) {
       return Scaffold(

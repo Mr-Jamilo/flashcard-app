@@ -95,13 +95,13 @@ class _CardEditorPageState extends State<CardEditorPage> {
     card = context.read<Collection>().fetchCard(cardID)!;
     frontController.document = Document.fromJson(jsonDecode(card.front));
     backController.document = Document.fromJson(jsonDecode(card.back));
-    dropdownValue = card.deck.value?.id;
+    dropdownValue = card.deckId;
   }
 
   @override
   Widget build(BuildContext context) {
     final database = context.watch<Collection>();
-    List<Deck> currentDecks = database.currentDecks;
+    List<dynamic> currentDecks = database.currentDecks;
 
     final defaultStyle = DefaultStyles(
       paragraph: DefaultTextBlockStyle(
@@ -145,9 +145,7 @@ class _CardEditorPageState extends State<CardEditorPage> {
                 label: const Text('Select A Deck'),
                 expandedInsets: EdgeInsets.zero,
                 enableSearch: true,
-                initialSelection: widget.cardID == -1
-                    ? -1
-                    : card.deck.value?.id,
+                initialSelection: widget.cardID == -1 ? -1 : card.deckId,
                 dropdownMenuEntries: currentDecks
                     .map(
                       (deck) =>
@@ -156,7 +154,7 @@ class _CardEditorPageState extends State<CardEditorPage> {
                     .toList(),
                 onSelected: (deckID) {
                   setState(() {
-                    dropdownValue = deckID!;
+                    dropdownValue = deckID;
                   });
                 },
                 validator: (value) {

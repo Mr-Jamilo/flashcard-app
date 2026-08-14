@@ -1,13 +1,11 @@
-import 'package:isar/isar.dart';
-import 'package:temp_app/models/card.dart';
+import 'package:isar_plus/isar_plus.dart';
 
 part 'deck.g.dart';
 
 @collection
 class Deck {
-  Id id = Isar.autoIncrement;
+  final int id;
   String name;
-  final cards = IsarLinks<Card>();
 
-  Deck({required this.name});
+  Deck({required this.id, required this.name});
 }
